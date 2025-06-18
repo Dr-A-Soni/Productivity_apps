@@ -39,11 +39,10 @@
       margin: 0 10vw 2em 10vw;
       min-height: 200px;
       box-shadow: 0 4px 16px #fcb69f77;
+      justify-content: center;
+      align-items: center;
     }
     .tab-content.active {
-      display: block;
-    }
-    .centered-content {
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -53,6 +52,36 @@
       display: flex;
       gap: 1em;
       margin-top: 1em;
+      justify-content: center;
+    }
+    .game-title {
+      text-align: center;
+      margin-bottom: 1em;
+      color: #ff6f91;
+    }
+    .game-img {
+      border-radius: 1em;
+      box-shadow: 0 2px 8px #fcb69f88;
+      margin-bottom: 1em;
+    }
+    .counter-value-text {
+      font-size: 1.5em;
+      text-align: center;
+      margin-bottom: 0.5em;
+    }
+    .guessing-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+    .guessing-section input, .guessing-section button {
+      margin-top: 0.5em;
+    }
+    .guessing-section p#guess-result {
+      margin-top: 1em;
+      margin-bottom: 1em;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -64,22 +93,22 @@
     <div class="tab" onclick="showTab(1)">Guessing Game</div>
   </div>
 
+  <!-- Counter Tab -->
   <div class="tab-content active" id="counter-tab">
-    <div class="centered-content">
-      <h2 style="text-align: center;">Counter Game</h2>
-      <img src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif" alt="Cute Cat" width="200" style="border-radius: 1em; box-shadow: 0 2px 8px #fcb69f88; margin-bottom: 1em;">
-      <p style="font-size: 1.5em; text-align: center;">Count: <span id="counter-value">0</span></p>
-      <div class="counter-buttons">
-        <button onclick="decrementCounter()">-1</button>
-        <button onclick="incrementCounter()">+1</button>
-        <button onclick="resetCounter()">Reset</button>
-      </div>
+    <h2 class="game-title">Counter Game</h2>
+    <img class="game-img" src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif" alt="Cute Cat" width="200">
+    <p class="counter-value-text">Count: <span id="counter-value">0</span></p>
+    <div class="counter-buttons">
+      <button onclick="decrementCounter()">-1</button>
+      <button onclick="incrementCounter()">+1</button>
+      <button onclick="resetCounter()">Reset</button>
     </div>
   </div>
 
+  <!-- Guessing Game Tab -->
   <div class="tab-content" id="guess-tab">
-    <div class="centered-content">
-      <h2>Guessing Game</h2>
+    <h2 class="game-title">Guessing Game</h2>
+    <div class="guessing-section">
       <p>Guess a number between 1 and 10:</p>
       <input type="number" id="guess-input" min="1" max="10">
       <button onclick="makeGuess()">Guess</button>
@@ -98,7 +127,7 @@
         tab.classList.toggle('active', i === idx)
       );
     }
-    // Counter
+    // Counter logic
     let counter = 0;
     function incrementCounter() {
       counter += 1;
@@ -112,7 +141,7 @@
       counter = 0;
       document.getElementById('counter-value').textContent = counter;
     }
-    // Guessing game
+    // Guessing game logic
     let secretNumber = Math.floor(Math.random() * 10) + 1;
     function makeGuess() {
       const guess = Number(document.getElementById('guess-input').value);
