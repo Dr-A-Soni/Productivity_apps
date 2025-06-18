@@ -56,9 +56,11 @@
   <div class="tab-content active" id="counter-tab">
     <!-- Place your counter game here (JS version or link/embed) -->
     <h2>Counter Game</h2>
-    <p>Count: <span id="counter-value">0</span></p>
-    <button onclick="incrementCounter()">+1</button>
-    <button onclick="resetCounter()">Reset</button>
+     <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+      <p>Count: <span id="counter-value">0</span></p>
+      <button onclick="incrementCounter()">+1</button>
+      <button onclick="incrementCounter()">-1</button>button>
+      <button onclick="resetCounter()">Reset</button>
   </div>
 
   <div class="tab-content" id="guess-tab">
