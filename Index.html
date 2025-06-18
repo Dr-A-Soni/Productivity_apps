@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Games Website</title>
+  <style>
+    body { font-family: sans-serif; background: #f0f0f0; max-width: 600px; margin: 40px auto; padding: 2em; border-radius: 1em; }
+    h1 { color: #333; }
+    .game { background: #fff; padding: 1em; border-radius: 0.5em; margin-bottom: 2em; box-shadow: 0 2px 6px #ddd; }
+    button { margin-top: 0.5em; }
+  </style>
+</head>
+<body>
+  <h1>Games Website</h1>
+
+  <div class="game" id="counter-game">
+    <h2>Counter Game</h2>
+    <p>Count: <span id="counter-value">0</span></p>
+    <button onclick="incrementCounter()">+1</button>
+    <button onclick="resetCounter()">Reset</button>
+  </div>
+
+  <div class="game" id="guessing-game">
+    <h2>Guessing Game</h2>
+    <p>Guess a number between 1 and 10:</p>
+    <input type="number" id="guess-input" min="1" max="10">
+    <button onclick="makeGuess()">Guess</button>
+    <p id="guess-result"></p>
+    <button onclick="resetGuessGame()">Restart</button>
+  </div>
+
+  <script>
+    // Counter Game Logic
+    let counter = 0;
+    function incrementCounter() {
+      counter += 1;
+      document.getElementById('counter-value').textContent = counter;
+    }
+    function resetCounter() {
+      counter = 0;
+      document.getElementById('counter-value').textContent = counter;
+    }
+
+    // Guessing Game Logic
+    let secretNumber = Math.floor(Math.random() * 10) + 1;
+    function makeGuess() {
+      const guess = Number(document.getElementById('guess-input').value);
+      const result = document.getElementById('guess-result');
+      if (!guess || guess < 1 || guess > 10) {
+        result.textContent = "Please enter a number between 1 and 10.";
+        return;
+      }
+      if (guess === secretNumber) {
+        result.textContent = "Congratulations! You guessed it!";
+      } else if (guess < secretNumber) {
+        result.textContent = "Too low! Try again.";
+      } else {
+        result.textContent = "Too high! Try again.";
+      }
+    }
+    function resetGuessGame() {
+      secretNumber = Math.floor(Math.random() * 10) + 1;
+      document.getElementById('guess-result').textContent = "";
+      document.getElementById('guess-input').value = "";
+    }
+  </script>
+</body>
+</html>
