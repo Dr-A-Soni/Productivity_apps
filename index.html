@@ -43,6 +43,17 @@
     .tab-content.active {
       display: block;
     }
+    .centered-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .counter-buttons {
+      display: flex;
+      gap: 1em;
+      margin-top: 1em;
+    }
   </style>
 </head>
 <body>
@@ -54,25 +65,27 @@
   </div>
 
   <div class="tab-content active" id="counter-tab">
-    <!-- Place your counter game here (JS version or link/embed) -->
-    <h2>Counter Game</h2>
-     <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+    <div class="centered-content">
+      <h2 style="text-align: center;">Counter Game</h2>
       <img src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif" alt="Cute Cat" width="200" style="border-radius: 1em; box-shadow: 0 2px 8px #fcb69f88; margin-bottom: 1em;">
       <p style="font-size: 1.5em; text-align: center;">Count: <span id="counter-value">0</span></p>
-      <p>Count: <span id="counter-value">0</span></p>
-      <button onclick="incrementCounter()">+1</button>
-      <button onclick="incrementCounter()">-1</button>button>
-      <button onclick="resetCounter()">Reset</button>
+      <div class="counter-buttons">
+        <button onclick="decrementCounter()">-1</button>
+        <button onclick="incrementCounter()">+1</button>
+        <button onclick="resetCounter()">Reset</button>
+      </div>
+    </div>
   </div>
 
   <div class="tab-content" id="guess-tab">
-    <!-- Place your guessing game here (JS version or link/embed) -->
-    <h2>Guessing Game</h2>
-    <p>Guess a number between 1 and 10:</p>
-    <input type="number" id="guess-input" min="1" max="10">
-    <button onclick="makeGuess()">Guess</button>
-    <p id="guess-result"></p>
-    <button onclick="resetGuessGame()">Restart</button>
+    <div class="centered-content">
+      <h2>Guessing Game</h2>
+      <p>Guess a number between 1 and 10:</p>
+      <input type="number" id="guess-input" min="1" max="10">
+      <button onclick="makeGuess()">Guess</button>
+      <p id="guess-result"></p>
+      <button onclick="resetGuessGame()">Restart</button>
+    </div>
   </div>
 
   <script>
@@ -89,6 +102,10 @@
     let counter = 0;
     function incrementCounter() {
       counter += 1;
+      document.getElementById('counter-value').textContent = counter;
+    }
+    function decrementCounter() {
+      counter -= 1;
       document.getElementById('counter-value').textContent = counter;
     }
     function resetCounter() {
