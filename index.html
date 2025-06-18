@@ -2,25 +2,67 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Games Website</title>
+  <title>Games Hub</title>
   <style>
-    body { font-family: sans-serif; background: #f0f0f0; max-width: 600px; margin: 40px auto; padding: 2em; border-radius: 1em; }
-    h1 { color: #333; }
-    .game { background: #fff; padding: 1em; border-radius: 0.5em; margin-bottom: 2em; box-shadow: 0 2px 6px #ddd; }
-    button { margin-top: 0.5em; }
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+    .tabs {
+      display: flex;
+      justify-content: center;
+      margin-top: 2em;
+    }
+    .tab {
+      background: #fff6ea;
+      border: 2px solid #ffb6b9;
+      border-radius: 10px 10px 0 0;
+      padding: 1em 2em;
+      margin-right: 0.5em;
+      cursor: pointer;
+      font-size: 1.2em;
+      transition: background 0.3s;
+    }
+    .tab.active {
+      background: #ffb6b9;
+      color: #fff;
+    }
+    .tab-content {
+      display: none;
+      background: #fff6ea;
+      border: 2px solid #ffb6b9;
+      border-radius: 0 0 10px 10px;
+      padding: 2em;
+      margin: 0 10vw 2em 10vw;
+      min-height: 200px;
+      box-shadow: 0 4px 16px #fcb69f77;
+    }
+    .tab-content.active {
+      display: block;
+    }
   </style>
 </head>
 <body>
-  <h1>Games Website</h1>
+  <h1 style="text-align:center; color:#ff6f91;">🎲 Games Hub 🎲</h1>
 
-  <div class="game" id="counter-game">
+  <div class="tabs">
+    <div class="tab active" onclick="showTab(0)">Counter</div>
+    <div class="tab" onclick="showTab(1)">Guessing Game</div>
+  </div>
+
+  <div class="tab-content active" id="counter-tab">
+    <!-- Place your counter game here (JS version or link/embed) -->
     <h2>Counter Game</h2>
     <p>Count: <span id="counter-value">0</span></p>
     <button onclick="incrementCounter()">+1</button>
     <button onclick="resetCounter()">Reset</button>
   </div>
 
-  <div class="game" id="guessing-game">
+  <div class="tab-content" id="guess-tab">
+    <!-- Place your guessing game here (JS version or link/embed) -->
     <h2>Guessing Game</h2>
     <p>Guess a number between 1 and 10:</p>
     <input type="number" id="guess-input" min="1" max="10">
@@ -30,7 +72,16 @@
   </div>
 
   <script>
-    // Counter Game Logic
+    // Tab switching logic
+    function showTab(idx) {
+      document.querySelectorAll('.tab').forEach((tab, i) =>
+        tab.classList.toggle('active', i === idx)
+      );
+      document.querySelectorAll('.tab-content').forEach((tab, i) =>
+        tab.classList.toggle('active', i === idx)
+      );
+    }
+    // Counter
     let counter = 0;
     function incrementCounter() {
       counter += 1;
@@ -40,8 +91,7 @@
       counter = 0;
       document.getElementById('counter-value').textContent = counter;
     }
-
-    // Guessing Game Logic
+    // Guessing game
     let secretNumber = Math.floor(Math.random() * 10) + 1;
     function makeGuess() {
       const guess = Number(document.getElementById('guess-input').value);
