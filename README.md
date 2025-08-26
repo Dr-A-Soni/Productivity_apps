@@ -31,7 +31,7 @@ A gamified productivity app that combines the classic tic-tac-toe gameplay with 
 
 ## 📱 Screenshots
 
-*Add screenshots here showing the game interface*
+![Model Output Screenshot](images/daily_task_challenge.PNG)
 
 ## 🎯 Why This Game?
 
