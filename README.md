@@ -20,7 +20,7 @@ A gamified productivity app that combines the classic tic-tac-toe gameplay with 
 
 ## 🚀 Live Demo
 
-[Play the Game Here](https://yourusername.github.io/task-tac-toe-game)
+[Play the Game Here](https://dr-a-soni.github.io/task-tac-toe-game)
 
 ## 🛠️ Technologies Used
 
