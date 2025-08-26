@@ -3,228 +3,424 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daily Task Challenge - Task-Tac-Toe Game</title>
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://unpkg.com/lucide-react@latest/dist/umd/lucide-react.js"></script>
+    <title>Daily Task Challenge</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            max-width: 350px;
+            margin: 0 auto;
+        }
+        
+        .task-box {
+            aspect-ratio: 1;
+            border: 2px solid #e879f9;
+            border-radius: 12px;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            background: white;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            min-height: 100px;
+        }
+        
+        .task-box:hover {
+            background: linear-gradient(135deg, #fdf4ff, #fae8ff);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(168, 85, 247, 0.15);
+        }
+        
+        .task-box.completed {
+            background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+            border-color: #86efac;
+        }
+        
+        .task-box.winning-line {
+            border-color: #fde047;
+            background: linear-gradient(135deg, #fffbeb, #fed7aa);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { box-shadow: 0 0 5px #fde047; }
+            to { box-shadow: 0 0 20px #fde047, 0 0 30px #fde047; }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .grand-win .task-box {
+            animation: pulse 1s ease-in-out infinite;
+        }
+        
+        .task-text {
+            font-size: 12px;
+            text-align: center;
+            word-wrap: break-word;
+            max-width: 100%;
+            color: #374151;
+            line-height: 1.4;
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+        
+        .task-text.completed {
+            text-decoration: line-through;
+            color: #9ca3af;
+        }
+        
+        .check-mark {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            color: #22c55e;
+            font-size: 20px;
+            animation: checkAppear 0.3s ease-out;
+        }
+        
+        @keyframes checkAppear {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        
+        .edit-icon {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            color: #9ca3af;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .task-box:hover .edit-icon {
+            opacity: 1;
+        }
+        
+        .winning-dot {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 12px;
+            height: 12px;
+            background: #fde047;
+            border-radius: 50%;
+            animation: pulse 1s ease-in-out infinite;
+        }
+        
+        .task-input {
+            width: 100%;
+            height: 100%;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 12px;
+            text-align: center;
+            resize: none;
+            font-family: inherit;
+        }
+        
+        .celebration {
+            animation: celebrationBounce 0.6s ease-out;
+        }
+        
+        @keyframes celebrationBounce {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .counter-badge {
+            background: linear-gradient(135deg, #f3e8ff, #e879f9);
+            color: #7c3aed;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .counter-badge.pink {
+            background: linear-gradient(135deg, #fce7f3, #f9a8d4);
+            color: #be185d;
+        }
+        
+        .counter-badge.yellow {
+            background: linear-gradient(135deg, #fefce8, #fde047);
+            color: #a16207;
+        }
+    </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
-    <div id="root"></div>
+<body class="bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50 min-h-screen flex items-center justify-center p-4">
+    <div class="max-w-md mx-auto p-8 bg-white/70 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/20">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold gradient-text mb-2">Daily Task Challenge</h1>
+            <h2 class="text-xl font-semibold text-gray-600 mb-3">Task-Tac-Toe Game</h2>
+            <p class="text-gray-500 text-sm">Complete all 9 tasks to conquer your day!</p>
+            
+            <div class="flex justify-center gap-3 mt-4">
+                <span class="counter-badge">
+                    Tasks: <span id="task-count">0</span>/9
+                </span>
+                <span class="counter-badge pink">
+                    Done: <span id="done-count">0</span>/9
+                </span>
+                <span id="lines-count" class="counter-badge yellow" style="display: none;">
+                    Lines: <span id="lines-number">0</span>
+                </span>
+            </div>
+        </div>
 
-    <script type="text/babel">
-        const { useState, useEffect } = React;
-        const { CheckCircle2, Edit3, Trophy, RotateCcw } = lucideReact;
+        <div id="small-win" class="celebration bg-gradient-to-r from-yellow-200 via-orange-200 to-yellow-300 text-gray-800 p-4 rounded-2xl mb-6 text-center" style="display: none;">
+            <div class="text-2xl mb-2">🌟</div>
+            <div class="text-lg font-bold">Great Progress!</div>
+            <p class="text-sm">You're on a roll! Keep it up!</p>
+        </div>
 
-        const TaskTacToe = () => {
-          const [tasks, setTasks] = useState(Array(9).fill(''));
-          const [completed, setCompleted] = useState(Array(9).fill(false));
-          const [editingIndex, setEditingIndex] = useState(null);
-          const [tempTask, setTempTask] = useState('');
-          const [grandWin, setGrandWin] = useState(false);
-          const [smallWins, setSmallWins] = useState([]);
-          const [showSmallWin, setShowSmallWin] = useState(false);
+        <div id="grand-win" class="celebration bg-gradient-to-r from-pink-200 via-purple-200 to-indigo-200 text-gray-800 p-6 rounded-2xl mb-6 text-center" style="display: none;">
+            <div class="text-4xl mb-3">🏆</div>
+            <h2 class="text-2xl font-bold mb-2">🎉 Congratulations! 🎉</h2>
+            <p class="text-base">You've completed all of today's tasks!</p>
+            <p id="bonus-text" class="text-sm mt-2 font-semibold" style="display: none;"></p>
+        </div>
 
-          const winningCombinations = [
-            [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
-            [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
-            [0, 4, 8], [2, 4, 6] // diagonals
-          ];
+        <div class="grid-container mb-8" id="game-grid">
+            <!-- Game boxes will be generated here -->
+        </div>
 
-          useEffect(() => {
-            checkWins();
-          }, [completed]);
+        <button onclick="resetGame()" class="w-full bg-gradient-to-r from-purple-500 via-pink-500 to-purple-600 hover:from-purple-600 hover:via-pink-600 hover:to-purple-700 text-white py-4 px-6 rounded-2xl font-semibold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 flex items-center justify-center gap-3">
+            <span class="text-xl">🔄</span>
+            New Game
+        </button>
 
-          const checkWins = () => {
+        <div class="mt-6 text-xs text-gray-400 text-center">
+            <p>💡 Get mini-celebrations for streaks, big celebration for completing your day!</p>
+        </div>
+    </div>
+
+    <script>
+        let tasks = Array(9).fill('');
+        let completed = Array(9).fill(false);
+        let smallWins = [];
+        let grandWin = false;
+        let editingIndex = null;
+
+        const winningCombinations = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8],
+            [0, 3, 6], [1, 4, 7], [2, 5, 8],
+            [0, 4, 8], [2, 4, 6]
+        ];
+
+        function createGrid() {
+            const grid = document.getElementById('game-grid');
+            grid.innerHTML = '';
+            
+            for (let i = 0; i < 9; i++) {
+                const box = document.createElement('div');
+                box.className = 'task-box';
+                box.onclick = () => handleBoxClick(i);
+                
+                if (editingIndex === i) {
+                    // Editing mode
+                    box.innerHTML = `
+                        <textarea class="task-input" placeholder="Enter your task..." 
+                                  onblur="saveTask(${i})" 
+                                  onkeydown="handleKeyPress(event, ${i})"
+                                  id="edit-input-${i}">${tasks[i] || ''}</textarea>
+                    `;
+                } else if (tasks[i]) {
+                    // Task exists
+                    const isCompleted = completed[i];
+                    const isWinning = isInWinningLine(i);
+                    
+                    box.innerHTML = `
+                        <div class="task-text${isCompleted ? ' completed' : ''}">${tasks[i]}</div>
+                        ${isCompleted ? '<div class="check-mark">✓</div>' : ''}
+                        ${isWinning ? '<div class="winning-dot"></div>' : ''}
+                        <div class="edit-icon">✏️</div>
+                    `;
+                    
+                    if (isCompleted) {
+                        box.classList.add('completed');
+                    }
+                    if (isWinning) {
+                        box.classList.add('winning-line');
+                    }
+                    
+                    // Add right-click to edit
+                    box.oncontextmenu = (e) => {
+                        e.preventDefault();
+                        startEditing(i);
+                        return false;
+                    };
+                } else {
+                    // Empty box
+                    box.innerHTML = `
+                        <div style="color: #c084fc; text-align: center;">
+                            <div style="font-size: 28px; margin-bottom: 6px;">✏️</div>
+                            <span style="font-size: 12px; font-weight: 500;">Add Task</span>
+                        </div>
+                    `;
+                }
+                
+                if (grandWin) {
+                    box.parentElement?.classList.add('grand-win');
+                }
+                
+                grid.appendChild(box);
+            }
+            
+            // Focus on editing input if in edit mode
+            if (editingIndex !== null) {
+                setTimeout(() => {
+                    const input = document.getElementById(`edit-input-${editingIndex}`);
+                    if (input) {
+                        input.focus();
+                        input.select();
+                    }
+                }, 50);
+            }
+        }
+
+        function handleBoxClick(index) {
+            if (editingIndex === index) return; // Already editing
+            
+            if (tasks[index]) {
+                // Toggle completion or start editing with double click
+                if (!grandWin) {
+                    completed[index] = !completed[index];
+                    checkWins();
+                    updateDisplay();
+                }
+            } else {
+                // Start editing empty box
+                startEditing(index);
+            }
+        }
+
+        function startEditing(index) {
+            editingIndex = index;
+            createGrid();
+        }
+
+        function saveTask(index) {
+            const input = document.getElementById(`edit-input-${index}`);
+            const value = input?.value?.trim();
+            
+            if (value) {
+                tasks[index] = value;
+            }
+            
+            editingIndex = null;
+            updateDisplay();
+        }
+
+        function handleKeyPress(event, index) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                saveTask(index);
+            } else if (event.key === 'Escape') {
+                editingIndex = null;
+                updateDisplay();
+            }
+        }
+
+        function isInWinningLine(index) {
+            return smallWins.some(line => line.includes(index));
+        }
+
+        function checkWins() {
             const newSmallWins = [];
             
-            // Check for small wins (3 in a row)
             for (let combo of winningCombinations) {
-              if (combo.every(index => completed[index] && tasks[index] !== '')) {
-                newSmallWins.push(combo);
-              }
+                if (combo.every(index => completed[index] && tasks[index] !== '')) {
+                    newSmallWins.push(combo);
+                }
             }
             
             // Show small win animation if we got a new one
             if (newSmallWins.length > smallWins.length) {
-              setShowSmallWin(true);
-              setTimeout(() => setShowSmallWin(false), 2000);
+                const smallWinEl = document.getElementById('small-win');
+                smallWinEl.style.display = 'block';
+                setTimeout(() => {
+                    smallWinEl.style.display = 'none';
+                }, 3000);
             }
             
-            setSmallWins(newSmallWins);
+            smallWins = newSmallWins;
             
-            // Check for grand win (all tasks completed)
+            // Check for grand win
             const allTasksExist = tasks.every(task => task !== '');
             const allTasksCompleted = completed.every(Boolean);
             
             if (allTasksExist && allTasksCompleted) {
-              setGrandWin(true);
-            }
-          };
-
-          const handleTaskEdit = (index) => {
-            setEditingIndex(index);
-            setTempTask(tasks[index]);
-          };
-
-          const saveTask = () => {
-            if (tempTask.trim()) {
-              const newTasks = [...tasks];
-              newTasks[editingIndex] = tempTask.trim();
-              setTasks(newTasks);
-            }
-            setEditingIndex(null);
-            setTempTask('');
-          };
-
-          const toggleComplete = (index) => {
-            if (tasks[index] && !grandWin) {
-              const newCompleted = [...completed];
-              newCompleted[index] = !newCompleted[index];
-              setCompleted(newCompleted);
-            }
-          };
-
-          const resetGame = () => {
-            setTasks(Array(9).fill(''));
-            setCompleted(Array(9).fill(false));
-            setGrandWin(false);
-            setSmallWins([]);
-            setShowSmallWin(false);
-            setEditingIndex(null);
-            setTempTask('');
-          };
-
-          const getCompletedCount = () => completed.filter(Boolean).length;
-          const getTaskCount = () => tasks.filter(task => task !== '').length;
-
-          return (
-            <div className="max-w-md mx-auto p-6 bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50 rounded-xl shadow-lg">
-              <div className="text-center mb-6">
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-1">Daily Task Challenge</h1>
-                <h2 className="text-lg font-semibold text-gray-600 mb-2">Task-Tac-Toe Game</h2>
-                <p className="text-gray-500 text-sm">Complete all 9 tasks to conquer your day!</p>
+                grandWin = true;
+                const grandWinEl = document.getElementById('grand-win');
+                grandWinEl.style.display = 'block';
                 
-                <div className="flex justify-center gap-4 mt-3 text-sm">
-                  <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full">
-                    Tasks: {getTaskCount()}/9
-                  </span>
-                  <span className="bg-pink-100 text-pink-700 px-3 py-1 rounded-full">
-                    Done: {getCompletedCount()}/9
-                  </span>
-                  {smallWins.length > 0 && (
-                    <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full">
-                      Lines: {smallWins.length}
-                    </span>
-                  )}
-                </div>
-              </div>
+                if (smallWins.length > 0) {
+                    const bonusText = document.getElementById('bonus-text');
+                    bonusText.textContent = `Plus ${smallWins.length} bonus streak${smallWins.length > 1 ? 's' : ''}! 🎯`;
+                    bonusText.style.display = 'block';
+                }
+            }
+        }
 
-              {showSmallWin && !grandWin && (
-                <div className="bg-gradient-to-r from-yellow-200 to-orange-200 text-gray-700 p-3 rounded-lg mb-4 text-center animate-pulse">
-                  <div className="text-lg">🌟 Great Progress! 🌟</div>
-                  <p className="text-xs">You're on a roll! Keep it up!</p>
-                </div>
-              )}
+        function updateDisplay() {
+            createGrid();
+            
+            // Update counters
+            const taskCount = tasks.filter(task => task !== '').length;
+            const doneCount = completed.filter(Boolean).length;
+            
+            document.getElementById('task-count').textContent = taskCount;
+            document.getElementById('done-count').textContent = doneCount;
+            
+            if (smallWins.length > 0) {
+                document.getElementById('lines-number').textContent = smallWins.length;
+                document.getElementById('lines-count').style.display = 'inline-block';
+            } else {
+                document.getElementById('lines-count').style.display = 'none';
+            }
+        }
 
-              {grandWin && (
-                <div className="bg-gradient-to-r from-pink-200 via-purple-200 to-indigo-200 text-gray-700 p-4 rounded-lg mb-4 text-center">
-                  <Trophy className="w-8 h-8 mx-auto mb-2 text-purple-600" />
-                  <h2 className="text-xl font-bold">🎉 Congratulations! 🎉</h2>
-                  <p className="text-sm">You've completed all of today's tasks!</p>
-                  {smallWins.length > 0 && (
-                    <p className="text-xs mt-1">Plus {smallWins.length} bonus streak{smallWins.length > 1 ? 's' : ''}!</p>
-                  )}
-                </div>
-              )}
+        function resetGame() {
+            tasks = Array(9).fill('');
+            completed = Array(9).fill(false);
+            smallWins = [];
+            grandWin = false;
+            editingIndex = null;
+            document.getElementById('small-win').style.display = 'none';
+            document.getElementById('grand-win').style.display = 'none';
+            document.querySelector('.grid-container')?.classList.remove('grand-win');
+            updateDisplay();
+        }
 
-              <div className="grid grid-cols-3 gap-2 mb-6">
-                {tasks.map((task, index) => {
-                  const isInWinningLine = smallWins.some(line => line.includes(index));
-                  
-                  return (
-                    <div
-                      key={index}
-                      className={`
-                        aspect-square border-2 rounded-lg p-2 flex flex-col justify-center items-center
-                        transition-all duration-300 cursor-pointer relative
-                        ${isInWinningLine ? 'border-yellow-300 bg-gradient-to-br from-yellow-50 to-orange-50 shadow-sm' : 'border-purple-200'}
-                        ${completed[index] ? 'bg-gradient-to-br from-green-50 to-emerald-50 border-green-300' : 'bg-white hover:bg-purple-25'}
-                        ${grandWin ? 'animate-pulse' : ''}
-                      `}
-                      onClick={() => task ? toggleComplete(index) : handleTaskEdit(index)}
-                    >
-                      {editingIndex === index ? (
-                        <div className="w-full h-full flex flex-col">
-                          <textarea
-                            value={tempTask}
-                            onChange={(e) => setTempTask(e.target.value)}
-                            placeholder="Enter task..."
-                            className="w-full h-full text-xs border-none outline-none resize-none bg-transparent"
-                            autoFocus
-                            onBlur={saveTask}
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter' && !e.shiftKey) {
-                                e.preventDefault();
-                                saveTask();
-                              }
-                            }}
-                          />
-                        </div>
-                      ) : task ? (
-                        <>
-                          <div className="text-xs text-center flex-1 flex items-center">
-                            <span className={completed[index] ? 'line-through text-gray-400' : 'text-gray-700'}>
-                              {task}
-                            </span>
-                          </div>
-                          
-                          {completed[index] && (
-                            <CheckCircle2 className="w-5 h-5 text-green-500 absolute top-1 right-1" />
-                          )}
-                          
-                          {isInWinningLine && (
-                            <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-300 rounded-full animate-pulse"></div>
-                          )}
-                          
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleTaskEdit(index);
-                            }}
-                            className="absolute top-1 left-1 opacity-0 hover:opacity-100 transition-opacity"
-                          >
-                            <Edit3 className="w-3 h-3 text-gray-400" />
-                          </button>
-                        </>
-                      ) : (
-                        <div className="text-gray-400 text-center">
-                          <Edit3 className="w-6 h-6 mx-auto mb-1 text-purple-300" />
-                          <span className="text-xs">Add Task</span>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
+        // Initialize the game
+        updateDisplay();
 
-              <button
-                onClick={resetGame}
-                className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition-all duration-200 shadow-md hover:shadow-lg"
-              >
-                <RotateCcw className="w-4 h-4" />
-                New Game
-              </button>
-
-              <div className="mt-4 text-xs text-gray-400 text-center">
-                <p>💡 Get mini-celebrations for streaks, big celebration for completing your day!</p>
-              </div>
-            </div>
-          );
-        };
-
-        ReactDOM.render(<TaskTacToe />, document.getElementById('root'));
+        // Add some keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'r' && e.ctrlKey) {
+                e.preventDefault();
+                resetGame();
+            }
+        });
     </script>
 </body>
 </html>
